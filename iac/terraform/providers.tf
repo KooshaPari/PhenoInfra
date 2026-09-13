@@ -7,11 +7,11 @@ terraform {
   required_providers {
     oci = {
       source  = "oracle/oci"
-      version = "~> 8.10"
+      version = "~> 9.0"
     }
     google = {
       source  = "hashicorp/google"
-      version = "~> 7.29"
+      version = "~> 8.1"
     }
     aws = {
       source  = "hashicorp/aws"
