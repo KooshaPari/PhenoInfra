@@ -149,7 +149,11 @@ def generate_landing(slug, name, domain, description, tier, language, features, 
         print(f"  SKIP  {slug}-landing (already exists)")
         return False
 
-    os.makedirs(os.path.join(landing_dir, "data"), exist_ok=True)
+    # Create proper Astro structure
+    pages_dir = os.path.join(landing_dir, "src", "pages")
+    data_dir = os.path.join(landing_dir, "data")
+    os.makedirs(pages_dir, exist_ok=True)
+    os.makedirs(data_dir, exist_ok=True)
 
     # config.json
     config = {
@@ -171,7 +175,7 @@ def generate_landing(slug, name, domain, description, tier, language, features, 
             "releases": f"https://github.com/KooshaPari/{name}/releases"
         }
     }
-    with open(os.path.join(landing_dir, "data", "config.json"), "w") as f:
+    with open(os.path.join(data_dir, "config.json"), "w") as f:
         json.dump(config, f, indent=2)
 
     # package.json
@@ -207,9 +211,46 @@ def generate_landing(slug, name, domain, description, tier, language, features, 
     with open(os.path.join(landing_dir, "vercel.json"), "w") as f:
         json.dump({"framework": "astro", "outputDirectory": "dist"}, f)
 
-    # index.astro (copy from template)
+    # astro.config.mjs
+    with open(os.path.join(landing_dir, "astro.config.mjs"), "w") as f:
+        f.write(f"""// @ts-check
+import {{ defineConfig }} from 'astro/config';
+import tailwindcss from '@tailwindcss/vite';
+
+export default defineConfig({{
+  site: 'https://{domain}',
+  vite: {{
+    plugins: [tailwindcss()],
+  }},
+}});
+""")
+
+    # tsconfig.json
+    with open(os.path.join(landing_dir, "tsconfig.json"), "w") as f:
+        json.dump({
+            "extends": "astro/tsconfigs/strict",
+            "include": [".astro/types.d.ts", "**/*"],
+            "exclude": ["dist"],
+            "compilerOptions": {
+                "resolveJsonModule": True,
+                "esModuleInterop": True,
+                "allowSyntheticDefaultImports": True,
+                "types": ["astro/client", "node"]
+            }
+        }, f, indent=2)
+
+    # src/env.d.ts
+    with open(os.path.join(pages_dir, "..", "env.d.ts"), "w") as f:
+        f.write('/// <reference types="astro/client" />\n')
+
+    # Copy index.astro to src/pages/
     if os.path.exists(TEMPLATE_ASTRO):
-        shutil.copy2(TEMPLATE_ASTRO, os.path.join(landing_dir, "index.astro"))
+        # Fix the import path for standalone sites
+        with open(TEMPLATE_ASTRO, "r") as f:
+            content = f.read()
+        content = content.replace("../../data/config.json", "../../data/config.json")
+        with open(os.path.join(pages_dir, "index.astro"), "w") as f:
+            f.write(content)
     else:
         print(f"  WARN  Template not found at {TEMPLATE_ASTRO}")
 
