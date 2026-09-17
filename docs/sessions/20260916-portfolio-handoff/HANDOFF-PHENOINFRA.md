@@ -12,7 +12,7 @@
 - All deployed to Vercel and promoted to production
 - All have real content (83-355 lines of Astro)
 - **BLOCKER:** CNAME DNS records needed: `<slug>.phenotype.space → cname.vercel-dns.com`
-- Cloudflare API token `REDACTED_CLOUDFLARE_TOKEN` does NOT have access to phenotype.space zone (only pheno.studio)
+- Cloudflare API token does NOT have access to phenotype.space zone (only pheno.studio)
 - Wrangler OAuth token can list zones but can't write DNS
 - Need: Cloudflare API token with Zone:DNS:Edit for phenotype.space
 
@@ -25,16 +25,16 @@ All wired to PhenoInfra shared infrakit crates (rev e001322):
 - **PhenoShared** (formerly phenoAI→pheno→PhenoShared): Already had 6 refs on main ✓
 
 ### Pine Absorption
-- 5 crates copied from KooshaPari/Pine → PhenoTooling/crates/pine-*
+- 5 crates copied from <REDACTED>/Pine → PhenoTooling/crates/pine-*
 - pine-core, pine-compat, pine-loader, pine-nvms, pine-syscall (6674 lines)
 - All compile clean in PhenoTooling workspace
 - Pine standalone repo README updated: "absorbed — canonical: PhenoTooling/crates/pine-*"
 
 ### Releases
 - **NanoVMS v1.1.0**: GitHub release with 3 binaries (linux-amd64, darwin-arm64, darwin-amd64, 2.3MB each)
-  https://github.com/KooshaPari/PhenoTooling/releases/tag/v1.1.0-nanovms
+  https://github.com/<REDACTED>/PhenoTooling/releases/tag/v1.1.0-nanovms
 - **BytePort v1.0.0**: Universal binaries from CI (DMG, .app.tar.gz, Windows, Linux)
-  https://github.com/KooshaPari/BytePort/releases/tag/v1.0.0
+  https://github.com/<REDACTED>/BytePort/releases/tag/v1.0.0
 
 ### CI/CD
 - Nightly CVP CI workflow committed to PhenoInfra: `.github/workflows/cvp-nightly.yml`
